@@ -17,6 +17,8 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
             notifyDataSetChanged()
         }
 
+    var onShopItemLongClickListener: OnShopItemLongClickListener? = null
+
     //как создавать вью, с которы будем работать (Этот метод вызовется условно 20 раз - в зависимости от вместительности элемента xml на экране)
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -38,7 +40,9 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         position: Int
     ) { //заполнение данными вьюх, которые создали в onCreateViewHolder
         val shopItem = shopList[position]
-        viewHolder.view.setOnLongClickListener { true }
+        viewHolder.view.setOnLongClickListener {
+            onShopItemLongClickListener?.onShopItemLongClick(shopItem)
+            true }
         viewHolder.tvName.text = "${shopItem.name}"
         viewHolder.tvCount.text = shopItem.count.toString()
     }
@@ -55,6 +59,8 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         return shopList.size
     }
 
+    //метод, использующийся, если для разных элементо используются разные макеты
+    //ViewType теперь используется внутри onCreateViewHolder
     override fun getItemViewType(position: Int): Int {
         val item = shopList[position]
         return if (item.enabled) {VIEW_TYPE_ENABLED} else {VIEW_TYPE_DISABLED}
@@ -68,10 +74,14 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         val tvCount = view.findViewById<TextView>(R.id.tv_count)
     }
 
+    interface OnShopItemLongClickListener {
+        fun onShopItemLongClick(shopItem: ShopItem)
+    }
+
     companion object {
         const val VIEW_TYPE_ENABLED = 100
         const val VIEW_TYPE_DISABLED = 101
-        const val MAX_POOL_SIZE = 10
+        const val MAX_POOL_SIZE = 30 //для фиксации Пулла ViewHoldr-ов
     }
 
 
