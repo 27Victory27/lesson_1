@@ -17,7 +17,8 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
             notifyDataSetChanged()
         }
 
-    var onShopItemLongClickListener: OnShopItemLongClickListener? = null
+    var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
+    var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
     //как создавать вью, с которы будем работать (Этот метод вызовется условно 20 раз - в зависимости от вместительности элемента xml на экране)
     override fun onCreateViewHolder(
@@ -41,8 +42,11 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     ) { //заполнение данными вьюх, которые создали в onCreateViewHolder
         val shopItem = shopList[position]
         viewHolder.view.setOnLongClickListener {
-            onShopItemLongClickListener?.onShopItemLongClick(shopItem)
+            onShopItemLongClickListener?.invoke(shopItem)
             true }
+        viewHolder.view.setOnClickListener{
+            onShopItemClickListener?.invoke(shopItem)
+        }
         viewHolder.tvName.text = "${shopItem.name}"
         viewHolder.tvCount.text = shopItem.count.toString()
     }

@@ -47,7 +47,7 @@ class ShopListRepositoryImpl : ShopListRepository {
     }
 
     private  fun updateList(){
-        shopListLD.value = shopList.toList()
+        shopListLD.value = shopList.sortedBy { it.id }.toList()
     }
 
 
