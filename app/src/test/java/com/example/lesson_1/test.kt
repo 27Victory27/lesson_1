@@ -5,7 +5,6 @@ fun main(){
     var a2 = 1
     val vika :Vika = Vika()
     val vika2 = Vika()
-    Vika.numberr=1+1
     vika.age
 
     println(a+a2)
